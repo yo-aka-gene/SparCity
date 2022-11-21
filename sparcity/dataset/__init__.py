@@ -1,5 +1,7 @@
 from ._loader import load_oyama
+from ._quadratic import QuadraticGenerator
 
 __all__ = [
-    "load_oyama"
+    "load_oyama",
+    "QuadraticGenerator",
 ]
