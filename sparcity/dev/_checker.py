@@ -3,6 +3,8 @@ functions for checking arguments
 """
 from typing import Any, Tuple, Union
 
+import numpy as np
+
 
 def typechecker(
     arg: Any,
@@ -62,7 +64,7 @@ def typechecker(
 
 
 def valchecker(
-    condition: bool,
+    condition: Union[bool, np.bool_],
     suffix: str = ""
 ) -> None:
     """
@@ -71,7 +73,7 @@ def valchecker(
 
     Parameters
     ----------
-    condition: bool
+    condition: Union[bool, numpy.bool_]
         required condition
 
     suffix: str, default: ""
@@ -99,7 +101,7 @@ def valchecker(
         ...
     AssertionError: Invalid value detected. Check the requirements. I like chocolate!!!
     """
-    typechecker(condition, bool, "condition")
+    typechecker(condition, (bool, np.bool_), "condition")
     typechecker(suffix, str, "suffix")
     assert condition, \
         f"Invalid value detected. Check the requirements.{' ' + suffix if suffix != '' else suffix}"
