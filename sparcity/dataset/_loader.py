@@ -26,6 +26,10 @@ def load_oyama(
         if as_Coord == True, it returns data as Coord;
         otherwise, as numpy.ndarray
 
+    Notes
+    -----
+    1 in oyama data is equivalent to 10 meters
+
     Examples
     --------
     >>> import numpy as np
