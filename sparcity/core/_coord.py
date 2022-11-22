@@ -68,7 +68,7 @@ class Coord:
         Examples
         --------
         >>> import numpy as np
-        >>> from sparcity.core import Coord
+        >>> from sparcity import Coord
         >>> x = np.linspace(0, 10, 100)
         >>> y = np.linspace(0, 20, 150)
         >>> np.random.seed(123)
@@ -112,7 +112,7 @@ class Coord:
         Examples
         --------
         >>> import numpy as np
-        >>> from sparcity.core import Coord
+        >>> from sparcity import Coord
         >>> x = np.linspace(0, 10, 100)
         >>> y = np.linspace(0, 20, 150)
         >>> np.random.seed(123)

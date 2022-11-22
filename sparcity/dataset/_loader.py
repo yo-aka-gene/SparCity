@@ -34,7 +34,7 @@ def load_oyama(
     --------
     >>> import numpy as np
     >>> from sparcity.dataset import load_oyama
-    >>> from sparcity.core import Coord
+    >>> from sparcity import Coord
     >>> numpy_data = load_oyama()
     >>> isinstance(numpy_data, np.ndarray)
     True

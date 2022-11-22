@@ -43,7 +43,7 @@ def subarea(
     Examples
     --------
     >>> import numpy as np
-    >>> from sparcity.core import Coord, subarea
+    >>> from sparcity import Coord, subarea
     >>> x = np.arange(5)
     >>> y = np.arange(4)
     >>> z = np.arange(20).reshape(4, 5)
