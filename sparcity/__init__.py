@@ -3,11 +3,14 @@
 from . import core
 from . import dataset
 from . import dev
+from .core import Coord, Generator
 
 __all__ = [
     "core",
+    "Coord",
     "dataset",
-    "dev"
+    "dev",
+    "Generator"
 ]
 
 __author__ = """Yuji Okano"""
