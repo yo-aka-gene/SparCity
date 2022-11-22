@@ -3,6 +3,7 @@
 from . import core
 from . import dataset
 from . import dev
+from . import random
 from .core import Coord, Generator, subarea
 
 __all__ = [
@@ -11,6 +12,7 @@ __all__ = [
     "dataset",
     "dev",
     "Generator",
+    "random",
     "subarea",
 ]
 
