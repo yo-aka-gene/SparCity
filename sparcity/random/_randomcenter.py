@@ -5,7 +5,7 @@ from typing import Tuple
 
 import numpy as np
 
-from sparcity import Coord
+from sparcity.core import Coord
 from sparcity.dev import typechecker
 from ._random import seedfixer
 
@@ -29,6 +29,16 @@ def random_coord(
     -------
     (x, y): Tuple[float]
         tuple of floats (length == 2)
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import sparcity as spc
+    >>> x, y = np.arange(3), np.arange(5)
+    >>> z = np.zeros((5, 3))
+    >>> area = spc.Coord(x, y, z)
+    >>> spc.random.random_coord(area, seed=123)
+    (1.3307395609368218, 3.696682980990738)
     """
     typechecker(field, Coord, "field")
     typechecker(seed, int, "seed")
