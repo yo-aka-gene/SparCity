@@ -5,6 +5,7 @@ import numpy as np
 
 from sparcity.dev import typechecker, valchecker
 
+
 def seedfixer(
         seed: int,
         length: int,
