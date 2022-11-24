@@ -78,18 +78,21 @@ class TrainData:
             typechecker(v, Coord, f"list_of_Coord[{i}]")
         self.input = pd.DataFrame(
             {
-                "longitude": np.append(
-                    *[v.x_2d.ravel() for v in list_of_Coord]
+                "longitude": np.concatenate(
+                    [v.x_2d.ravel() for v in list_of_Coord],
+                    axis=0
                 ),
-                "latitude": np.append(
-                    *[v.y_2d.ravel() for v in list_of_Coord]
+                "latitude": np.concatenate(
+                    [v.y_2d.ravel() for v in list_of_Coord],
+                    axis=0
                 )
             }
         ).drop_duplicates()
         self.output = pd.DataFrame(
             {
-                "altitude": np.append(
-                    *[v.z.ravel() for v in list_of_Coord]
+                "altitude": np.concatenate(
+                    [v.z.ravel() for v in list_of_Coord],
+                    axis=0
                 )
             }
         ).loc[self.input.index, :]
@@ -125,12 +128,12 @@ class TrainData:
         True
         >>> np.all(train.input.values == ret[0])
         True
-        >>> np.all(train.output.values == ret[1])
+        >>> np.all(train.output.values.ravel() == ret[1])
         True
         """
         return (
             self.input.values,
-            self.output.values
+            self.output.values.ravel()
         )
 
     def as_tensor(self) -> Tuple[t.Tensor]:
@@ -143,7 +146,7 @@ class TrainData:
         Examples
         --------
         >>> import numpy as np
-        >>> import torch
+        >>> import torch as t
         >>> from sparcity import Coord, TrainData
         >>> x1 = np.array([0, 1, 2])
         >>> y1 = np.array([3, 4, 5])
@@ -159,16 +162,18 @@ class TrainData:
         True
         >>> len(ret) == 2
         True
-        >>> isinstance(ret[0], torch.Tensor)
+        >>> isinstance(ret[0], t.Tensor)
         True
-        >>> isinstance(ret[1], torch.Tensor)
+        >>> isinstance(ret[1], t.Tensor)
         True
-        >>> torch.all(torch.tensor(train.input.values) == ret[0])
+        >>> tensorx = t.tensor(train.input.values, dtype=t.float32)
+        >>> t.all(tensorx == ret[0])
         tensor(True)
-        >>> torch.all(torch.tensor(train.output.values) == ret[1])
+        >>> tensory = t.tensor(train.output.values.ravel(), dtype=t.float32)
+        >>> t.all(tensory == ret[1])
         tensor(True)
         """
         return (
-            t.tensor(self.input.values),
-            t.tensor(self.output.values)
+            t.tensor(self.input.values, dtype=t.float32),
+            t.tensor(self.output.values.ravel(), dtype=t.float32)
         )
