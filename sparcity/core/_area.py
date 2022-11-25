@@ -189,15 +189,24 @@ def patch(
     summed_z = directsum[idx, 2]
     summed_coo = np.array([str(tuple(v)) for v in summed_coo])
 
-    z = np.array([
-        summed_z[
-            np.where(summed_coo == str(coo))[0].item()
-        ] if str(coo) in summed_coo else np.nan for coo in tqdm(
+    coordmtx = np.array([
+        str(v) for v in tqdm(
             product(field.y, field.x),
-            desc="Step2: Identification",
-            total=field.y.size * field.x.size
+            desc="Step2: Generating Coordinate Matrix",
+            total=np.prod(field.shape)
         )
     ]).reshape(*field.shape)
+
+    z = np.zeros(field.shape)
+
+    for i, v in tqdm(
+        enumerate(summed_coo),
+        desc="Step3: Identification",
+        total=len(summed_coo)
+    ):
+        z += np.where(coordmtx == v, summed_z[i], 0)
+
+    z = np.where(z == 0, np.nan, z)
 
     return Coord(
         x=field.x,
