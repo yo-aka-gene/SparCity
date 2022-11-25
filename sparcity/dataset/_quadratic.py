@@ -92,6 +92,7 @@ class QuadraticGenerator(Generator):
         Examples
         --------
         >>> import numpy as np
+        >>> from sparcity import Coord, Generator
         >>> from sparcity.dataset import QuadraticGenerator
         >>> model1 = QuadraticGenerator()
         >>> np.all(model1.x == np.linspace(0, 100, 1000))
@@ -108,18 +109,27 @@ class QuadraticGenerator(Generator):
         True
         >>> model1.shape
         (1000, 1000)
+        >>> isinstance(model1, QuadraticGenerator)
+        True
+        >>> isinstance(model1, Generator)
+        True
+        >>> isinstance(model1, Coord)
+        True
         >>> a, b, c = (2, 3, 4)
         >>> x1, x2, y1, y2 = (10, 20, 30, 40)
-        >>> model2 = QuadraticGenerator(a, b, c, x1, x2, y1, y2)
-        >>> np.all(model2.x == np.linspace(0, 100, 1000))
+        >>> xrange = np.linspace(-10, 50, 100)
+        >>> yrange = np.linspace(20, 70, 150)
+        >>> model2 = QuadraticGenerator(a, b, c, x1, x2, y1, y2, xrange, yrange)
+        >>> np.all(model2.x == xrange)
         True
-        >>> np.all(model2.y == np.linspace(0, 100, 1000))
+        >>> np.all(model2.y == yrange)
         True
-        >>> z2 = a * (x_2d - x1) ** 2 + b * (y_2d - y1) ** 2 + c * (x_2d - x2) * (y_2d - y2)
+        >>> x_2d_2, y_2d_2 = np.meshgrid(xrange, yrange)
+        >>> z2 = a * (x_2d_2 - x1) ** 2 + b * (y_2d_2 - y1) ** 2 + c * (x_2d_2 - x2) * (y_2d_2 - y2)
         >>> np.all(model2.z == z2)
         True
         >>> model2.shape
-        (1000, 1000)
+        (150, 100)
         """
         typechecker(a, (float, int), "a")
         typechecker(b, (float, int), "b")
