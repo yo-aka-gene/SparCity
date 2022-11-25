@@ -64,7 +64,7 @@ class UnknownCoord(Coord):
         Examples
         --------
         >>> import numpy as np
-        >>> from sparcity import UnknownCoord
+        >>> from sparcity import Coord, UnknownCoord
         >>> x = np.linspace(0, 10, 100)
         >>> y = np.linspace(0, 20, 150)
         >>> x_2d, y_2d = np.meshgrid(x, y)
@@ -80,6 +80,10 @@ class UnknownCoord(Coord):
         >>> np.all(area.y_2d == y_2d)
         True
         >>> area.shape == (150, 100)
+        True
+        >>> isinstance(area, UnknownCoord)
+        True
+        >>> isinstance(area, Coord)
         True
         """
         typechecker(x, np.ndarray, "x")
