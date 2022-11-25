@@ -25,11 +25,11 @@ class Generator(Coord):
     ----------
     x: np.ndarray
         x coordinates (longitude) for the designated area.
-        Fixed to `np.linspace(0, 1000, 10000)`
+        Given by `xrange` argument.
 
     y: np.ndarray
         y coordinates (latitude) for the designated area.
-        Fixed to `np.linspace(0, 1000, 10000)`
+        Given by `yrange` argument.
 
     z: np.ndarray
         z values (e.g., altitude) for the designated area.
@@ -45,18 +45,23 @@ class Generator(Coord):
         shape of z
     """
     @abstractmethod
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, xrange, yrange, **kwargs) -> None:
         """
         Parameters
         ----------
+        xrange: np.ndarray
+            x-values to calculate
+
+        yrange: np.ndarray
+            y-values to calculate
+
         kwargs: Any
             keyword arguments to control the function of z
         """
-        # self.x and self.y should be fixed.
-        self.x = np.linspace(0, 1000, 10000)
-        self.y = np.linspace(0, 1000, 10000)
+        self.x = xrange
+        self.y = yrange
         # actual implementation of self.z is flexible
-        self.z = np.zeros(10000, 10000)
+        self.z = np.empty((self.y.size, self.x.size))
         self.x_2d, self.y_2d = np.meshgrid(self.x, self.y)
         self.shape = self.z.shape
 
