@@ -123,7 +123,7 @@ def patch(
     -------
     DiscreteArea: Coord
         Coord class of discrete area. The z values are taken over from the subareas
-        while the rest z values missing in the subareas are filled with numpy.nan
+        while the rest z values missing in the subareas are filled with numpy.nan.
 
     Examples
     --------
