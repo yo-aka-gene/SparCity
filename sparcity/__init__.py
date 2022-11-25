@@ -4,7 +4,7 @@ from . import core
 from . import dataset
 from . import dev
 from . import random
-from .core import Coord, Generator, subarea, TrainData
+from .core import Coord, Generator, subarea, patch, TestData, TrainData, UnknownCoord
 
 __all__ = [
     "core",
@@ -12,9 +12,12 @@ __all__ = [
     "dataset",
     "dev",
     "Generator",
+    "patch",
     "random",
     "subarea",
+    "TestData",
     "TrainData",
+    "UnknownCoord",
 ]
 
 __author__ = """Yuji Okano"""

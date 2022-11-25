@@ -1,7 +1,7 @@
 """
 Class of training dataset
 """
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -17,7 +17,7 @@ class TrainData:
 
     Methods
     -------
-    __init__(list_of_Coord: List[Coord]) -> None:
+    __init__(coordinates: Union[Coord, List[Coord]]) -> None:
         initialize attributes listed below.
 
     as_ndarray() -> Tuple[numpy.ndarray]:
@@ -39,13 +39,13 @@ class TrainData:
     """
     def __init__(
         self,
-        list_of_Coord: List[Coord]
+        coordinates: Union[Coord, List[Coord]]
     ) -> None:
         """
         Parameters
         ----------
-        list_of_Coord: List[Coord]
-            list of Coord (expected sampled subareas in Gaussian Process Regression)
+        coordinates: Union[Coord, List[Coord]]
+            Coord or list of Coord (expected sampled subareas in Gaussian Process Regression)
 
         Examples
         --------
@@ -56,34 +56,49 @@ class TrainData:
         >>> y1 = np.array([3, 4, 5])
         >>> z1 = np.array([[ 6,  7,  8], [ 9, 10, 11], [12, 13, 14]])
         >>> area1 = Coord(x=x1, y=y1, z=z1)
+        >>> input1 = pd.DataFrame({\
+            "longitude": area1.x_2d.ravel(),\
+            "latitude": area1.y_2d.ravel()\
+            })
+        >>> output1 = pd.DataFrame({\
+            "altitude": area1.z.ravel()\
+            })
+        >>> train1 = TrainData(area1)
+        >>> np.all(train1.input == input1)
+        True
+        >>> np.all(train1.output == output1)
+        True
         >>> x2 = np.array([2, 3])
         >>> y2 = np.array([5, 6])
         >>> z2 = np.array([[14, 15], [16, 17]])
         >>> area2 = Coord(x=x2, y=y2, z=z2)
-        >>> train = TrainData([area1, area2])
-        >>> input = pd.DataFrame({\
+        >>> input2 = pd.DataFrame({\
             "longitude": np.append(*[v.x_2d.ravel() for v in [area1, area2]]),\
             "latitude": np.append(*[v.y_2d.ravel() for v in [area1, area2]])\
             }).drop_duplicates()
-        >>> output = pd.DataFrame({\
+        >>> output2 = pd.DataFrame({\
             "altitude": np.append(*[v.z.ravel() for v in [area1, area2]])\
-            }).loc[input.index, :]
-        >>> np.all(train.input == input)
+            }).loc[input2.index, :]
+        >>> train2 = TrainData([area1, area2])
+        >>> np.all(train2.input == input2)
         True
-        >>> np.all(train.output == output)
+        >>> np.all(train2.output == output2)
         True
         """
-        typechecker(list_of_Coord, list, "list_of_Coord")
-        for i, v in enumerate(list_of_Coord):
-            typechecker(v, Coord, f"list_of_Coord[{i}]")
+        typechecker(coordinates, (Coord, list), "coordinates")
+        if isinstance(coordinates, list):
+            for i, v in enumerate(coordinates):
+                typechecker(v, Coord, f"coordinates[{i}]")
+        else:
+            coordinates = [coordinates]
         self.input = pd.DataFrame(
             {
                 "longitude": np.concatenate(
-                    [v.x_2d.ravel() for v in list_of_Coord],
+                    [v.x_2d.ravel() for v in coordinates],
                     axis=0
                 ),
                 "latitude": np.concatenate(
-                    [v.y_2d.ravel() for v in list_of_Coord],
+                    [v.y_2d.ravel() for v in coordinates],
                     axis=0
                 )
             }
@@ -91,7 +106,7 @@ class TrainData:
         self.output = pd.DataFrame(
             {
                 "altitude": np.concatenate(
-                    [v.z.ravel() for v in list_of_Coord],
+                    [v.z.ravel() for v in coordinates],
                     axis=0
                 )
             }
