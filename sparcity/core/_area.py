@@ -5,6 +5,7 @@ from itertools import product
 from typing import List, Union
 
 import numpy as np
+from tqdm import tqdm
 
 from ._coord import Coord
 from sparcity.dev import is_subarray, typechecker, valchecker
@@ -176,7 +177,11 @@ def patch(
                 (*v, subarea.z.ravel()[i]) for i, v in enumerate(
                     product(subarea.y, subarea.x)
                 )
-            ]) for subarea in list_of_Coord
+            ]) for subarea in tqdm(
+                list_of_Coord,
+                desc="Step1: Concatenation",
+                total=len(list_of_Coord)
+            )
         ],
         axis=0
     )
@@ -187,8 +192,10 @@ def patch(
     z = np.array([
         summed_z[
             np.where(summed_coo == str(coo))[0].item()
-        ] if str(coo) in summed_coo else np.nan for coo in product(
-            field.y, field.x
+        ] if str(coo) in summed_coo else np.nan for coo in tqdm(
+            product(field.y, field.x),
+            desc="Step2: Identification",
+            total=field.y.size * field.x.size
         )
     ]).reshape(*field.shape)
 
