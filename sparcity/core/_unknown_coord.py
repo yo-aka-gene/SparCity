@@ -9,7 +9,9 @@ from ._coord import Coord
 
 class UnknownCoord(Coord):
     """
-    Class of Coordinates of unknown z values (altitudes)
+    Class of Coordinates of unknown z values (altitudes).
+    Use this class instead of Coord for estimation of actual data
+    when the correct z values are not measured.
 
     Methods
     -------
