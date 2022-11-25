@@ -1,12 +1,13 @@
 """
 function to crop a square-shaped area
 """
-from typing import Union
+from itertools import product
+from typing import List, Union
 
 import numpy as np
 
 from ._coord import Coord
-from sparcity.dev import typechecker, valchecker
+from sparcity.dev import is_subarray, typechecker, valchecker
 
 
 def subarea(
@@ -97,4 +98,102 @@ def subarea(
         x=field.x[locx],
         y=field.y[locy],
         z=field.z[:, locx][locy, :]
+    )
+
+
+def patch(
+        list_of_Coord: List[Coord],
+        field: Coord
+) -> Coord:
+    """
+    A function to concatenate discrete subareas.
+    Use this function to make TestData class for discrete areas
+
+    Parameters
+    ----------
+    list_of_Coord: List[Coord]
+        list of subareas in field
+
+    field: Coord
+        Coord class of the original field.
+        Required for get information about overall (x, y) values.
+        Use UnknownCoord instead if the correct z values are unknown.
+
+    Returns
+    -------
+    DiscreteArea: Coord
+        Coord class of discrete area. The z values are taken over from the subareas
+        while the rest z values missing in the subareas are filled with numpy.nan
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from sparcity import Coord, patch, UnknownCoord
+    >>> x1 = np.array([0, 1, 2])
+    >>> y1 = np.array([3, 4, 5])
+    >>> z1 = np.array([[ 6,  7,  8], [ 9, 10, 11], [12, 13, 14]])
+    >>> area1 = Coord(x=x1, y=y1, z=z1)
+    >>> x2 = np.array([2, 3])
+    >>> y2 = np.array([5, 6])
+    >>> z2 = np.array([[14, 15], [16, 17]])
+    >>> area2 = Coord(x=x2, y=y2, z=z2)
+    >>> x = np.unique(np.append(x1, x2))
+    >>> x
+    array([0, 1, 2, 3])
+    >>> y = np.unique(np.append(y1, y2))
+    >>> y
+    array([3, 4, 5, 6])
+    >>> field = UnknownCoord(x=x, y=y)
+    >>> patched = patch([area1, area2], field)
+    >>> np.all(patched.x == x)
+    True
+    >>> np.all(patched.y == y)
+    True
+    >>> patched.z
+    array([[ 6.,  7.,  8., nan],
+           [ 9., 10., 11., nan],
+           [12., 13., 14., 15.],
+           [nan, nan, 16., 17.]])
+    >>> patched.shape
+    (4, 4)
+    """
+    typechecker(list_of_Coord, list, "list_of_Coord")
+    typechecker(field, Coord, "field")
+    for i, v in enumerate(list_of_Coord):
+        typechecker(v, Coord, f"list_of_Coord[{i}]")
+        valchecker(
+            is_subarray(v.x, field.x),
+            f"list_of_Coord[{i}] expected to be a subarea of field"
+        )
+        valchecker(
+            is_subarray(v.y, field.y),
+            f"list_of_Coord[{i}] expected to be a subarea of field"
+        )
+
+    directsum = np.concatenate(
+        [
+            np.array([
+                (*v, subarea.z.ravel()[i]) for i, v in enumerate(
+                    product(subarea.y, subarea.x)
+                )
+            ]) for subarea in list_of_Coord
+        ],
+        axis=0
+    )
+    summed_coo, idx = np.unique(directsum[:, :2], axis=0, return_index=True)
+    summed_z = directsum[idx, 2]
+    summed_coo = np.array([str(tuple(v)) for v in summed_coo])
+
+    z = np.array([
+        summed_z[
+            np.where(summed_coo == str(coo))[0].item()
+        ] if str(coo) in summed_coo else np.nan for coo in product(
+            field.y, field.x
+        )
+    ]).reshape(*field.shape)
+
+    return Coord(
+        x=field.x,
+        y=field.y,
+        z=z
     )
