@@ -31,7 +31,7 @@ class KISSGPRegression(gpt.models.ExactGP):
             likelihood
         )
 
-        grid_size = gpt.utils.grid.choose_grid_size(*traindata.as_tensor[0])
+        grid_size = gpt.utils.grid.choose_grid_size(*traindata.as_tensor()[0])
 
         self.train_x, self.train_y = traindata.as_tensor()
         self.likelihood = likelihood
