@@ -1,6 +1,7 @@
 from ._area import subarea, patch
 from ._coord import Coord
 from ._generator import Generator
+from ._test_data import TestData
 from ._training_data import TrainData
 from ._unknown_coord import UnknownCoord
 
@@ -9,6 +10,7 @@ __all__ = [
     "Generator",
     "patch",
     "subarea",
+    "TestData",
     "TrainData",
     "UnknownCoord",
 ]

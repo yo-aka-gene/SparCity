@@ -4,7 +4,7 @@ from . import core
 from . import dataset
 from . import dev
 from . import random
-from .core import Coord, Generator, subarea, patch, TrainData, UnknownCoord
+from .core import Coord, Generator, subarea, patch, TestData, TrainData, UnknownCoord
 
 __all__ = [
     "core",
@@ -15,6 +15,7 @@ __all__ = [
     "patch",
     "random",
     "subarea",
+    "TestData",
     "TrainData",
     "UnknownCoord",
 ]
