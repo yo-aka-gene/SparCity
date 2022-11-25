@@ -1,14 +1,14 @@
 """
 function to crop a square-shaped area
 """
-from itertools import product
 from typing import List, Union
 
 import numpy as np
 from tqdm import tqdm
 
-from ._coord import Coord
 from sparcity.dev import is_subarray, typechecker, valchecker
+from ._coord import Coord
+from ._subcoord import SubCoord
 
 
 def subarea(
@@ -16,7 +16,7 @@ def subarea(
     y: Union[float, int],
     length: Union[float, int],
     field: Coord
-) -> Coord:
+) -> SubCoord:
     """
     A function that crops a squared-shaped area
     centering the designated point (x, y)
@@ -38,8 +38,8 @@ def subarea(
 
     Returns
     -------
-    Subarea: Coord
-        Coord class of the cropped subarea.
+    Subarea: SubCoord
+        SubCoord class of the cropped subarea.
         The center position will be automatically formatted to adjust the original field.
 
     Examples
@@ -95,16 +95,19 @@ def subarea(
     else:
         locy = np.where((y - diff <= field.y) & (field.y <= y + diff))[0]
 
-    return Coord(
+    return SubCoord(
         x=field.x[locx],
         y=field.y[locy],
-        z=field.z[:, locx][locy, :]
+        z=field.z[:, locx][locy, :],
+        locx=locx,
+        locy=locy
     )
 
 
 def patch(
         list_of_Coord: List[Coord],
-        field: Coord
+        field: Coord,
+        logging: bool = False
 ) -> Coord:
     """
     A function to concatenate discrete subareas.
@@ -113,12 +116,15 @@ def patch(
     Parameters
     ----------
     list_of_Coord: List[Coord]
-        list of subareas in field
+        list of SubCoord in field
 
     field: Coord
         Coord class of the original field.
         Required for get information about overall (x, y) values.
         Use UnknownCoord instead if the correct z values are unknown.
+
+    logging: bool, default: False
+        Set True to show progress bar
 
     Returns
     -------
@@ -160,6 +166,8 @@ def patch(
     """
     typechecker(list_of_Coord, list, "list_of_Coord")
     typechecker(field, Coord, "field")
+    typechecker(logging, bool, "logging")
+    is_all_subcoord = True
     for i, v in enumerate(list_of_Coord):
         typechecker(v, Coord, f"list_of_Coord[{i}]")
         valchecker(
@@ -170,43 +178,54 @@ def patch(
             is_subarray(v.y, field.y),
             f"list_of_Coord[{i}] expected to be a subarea of field"
         )
-
-    directsum = np.concatenate(
-        [
-            np.array([
-                (*v, subarea.z.ravel()[i]) for i, v in enumerate(
-                    product(subarea.y, subarea.x)
-                )
-            ]) for subarea in tqdm(
-                list_of_Coord,
-                desc="Step1: Concatenation",
-                total=len(list_of_Coord)
-            )
-        ],
-        axis=0
-    )
-    summed_coo, idx = np.unique(directsum[:, :2], axis=0, return_index=True)
-    summed_z = directsum[idx, 2]
-    summed_coo = np.array([str(tuple(v)) for v in summed_coo])
-
-    coordmtx = np.array([
-        str(v) for v in tqdm(
-            product(field.y, field.x),
-            desc="Step2: Generating Coordinate Matrix",
-            total=np.prod(field.shape)
-        )
-    ]).reshape(*field.shape)
+        is_all_subcoord &= isinstance(v, SubCoord)
 
     z = np.zeros(field.shape)
+    z = np.where(z == 0, np.nan, np.nan)
 
-    for i, v in tqdm(
-        enumerate(summed_coo),
-        desc="Step3: Identification",
-        total=len(summed_coo)
-    ):
-        z += np.where(coordmtx == v, summed_z[i], 0)
+    if is_all_subcoord:
+        if logging:
+            for v in tqdm(
+                list_of_Coord,
+                desc="Referring Data Location",
+                total=len(list_of_Coord)
+            ):
+                z[v.loc] = v.z.ravel()
+        else:
+            for v in list_of_Coord:
+                z[v.loc] = v.z.ravel()
 
-    z = np.where(z == 0, np.nan, z)
+    else:
+        if logging:
+            for v in tqdm(
+                list_of_Coord,
+                desc="Referring Data Location",
+                total=len(list_of_Coord)
+            ):
+                m_x = np.where(field.x == v.x.min())[0].item()
+                M_x = np.where(field.x == v.x.max())[0].item()
+                m_y = np.where(field.y == v.y.min())[0].item()
+                M_y = np.where(field.y == v.y.max())[0].item()
+                locx = np.arange(m_x, M_x + 1)
+                locy = np.arange(m_y, M_y + 1)
+                loc = (
+                    np.tile(locy, locx.size).reshape(locx.size, locy.size).T.ravel(),
+                    np.tile(locx, locy.size)
+                )
+                z[loc] = v.z.ravel()
+        else:
+            for v in list_of_Coord:
+                m_x = np.where(field.x == v.x.min())[0].item()
+                M_x = np.where(field.x == v.x.max())[0].item()
+                m_y = np.where(field.y == v.y.min())[0].item()
+                M_y = np.where(field.y == v.y.max())[0].item()
+                locx = np.arange(m_x, M_x + 1)
+                locy = np.arange(m_y, M_y + 1)
+                loc = (
+                    np.tile(locy, locx.size).reshape(locx.size, locy.size).T.ravel(),
+                    np.tile(locx, locy.size)
+                )
+                z[loc] = v.z.ravel()
 
     return Coord(
         x=field.x,
