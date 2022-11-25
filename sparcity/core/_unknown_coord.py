@@ -67,14 +67,13 @@ class UnknownCoord(Coord):
         >>> from sparcity import UnknownCoord
         >>> x = np.linspace(0, 10, 100)
         >>> y = np.linspace(0, 20, 150)
-        >>> z = np.array([np.nan for v in np.arange(150 * 100)]).reshape(150, 100)
         >>> x_2d, y_2d = np.meshgrid(x, y)
         >>> area = UnknownCoord(x=x, y=y)
         >>> np.all(area.x == x)
         True
         >>> np.all(area.y == y)
         True
-        >>> np.all(area.z == z)
+        >>> np.all(np.isnan(area.z))
         True
         >>> np.all(area.x_2d == x_2d)
         True
@@ -108,13 +107,13 @@ class UnknownCoord(Coord):
         >>> from sparcity import UnknownCoord
         >>> x = np.linspace(0, 10, 100)
         >>> y = np.linspace(0, 20, 150)
-        >>> area = UnknownCoord(x=x, y=y, z=z)
+        >>> area = UnknownCoord(x=x, y=y)
         >>> area_dict = area()
         >>> np.all(area_dict["X"] == area.x_2d)
         True
         >>> np.all(area_dict["Y"] == area.y_2d)
         True
-        >>> np.all(area_dict["Z"] == area.z)
+        >>> np.all(np.isnan(area_dict["Z"]))
         True
         """
         return dict(X=self.x_2d, Y=self.y_2d, Z=self.z)
