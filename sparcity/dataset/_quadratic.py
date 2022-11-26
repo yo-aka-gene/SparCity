@@ -92,7 +92,8 @@ class QuadraticGenerator(Generator):
         Examples
         --------
         >>> import numpy as np
-        >>> from sparcity import Coord, Generator
+        >>> from sparcity import Coord
+        >>> from sparcity.core import Generator
         >>> from sparcity.dataset import QuadraticGenerator
         >>> model1 = QuadraticGenerator()
         >>> np.all(model1.x == np.linspace(0, 100, 1000))
