@@ -122,7 +122,7 @@ class KISSGPRegression(gpt.models.ExactGP):
 
         with t.no_grad(), gpt.settings.fast_pred_var():
             self.predicted = self.likelihood(
-                self(*testdata.as_tensor()[0])
+                self(testdata.as_tensor()[0])
             ).mean.view(*testdata.shape)
 
             self.groundtruth = testdata.as_tensor[1].reshape(
