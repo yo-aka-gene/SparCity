@@ -125,7 +125,7 @@ class KISSGPRegression(gpt.models.ExactGP):
                 self(testdata.as_tensor()[0])
             ).mean.view(*testdata.shape)
 
-            self.groundtruth = testdata.as_tensor[1].reshape(
+            self.groundtruth = testdata.as_tensor()[1].reshape(
                 *testdata.shape
             )
 
