@@ -239,7 +239,7 @@ class KISSGPRegression(gpt.models.ExactGP):
             ).mean.view(*testdata.field.shape)
 
         return Coord(
-            x=testdata.x,
-            y=testdata.y,
+            x=testdata.field.x,
+            y=testdata.field.y,
             z=predicted.numpy()
         )
