@@ -6,18 +6,29 @@ from typing import Union
 import numpy as np
 
 from sparcity.core import Generator
-from sparcity.dev import typechecker
+from sparcity.dev import is_monotonical_increasing, typechecker, valchecker
 
 
 class QuadraticGenerator(Generator):
     """
     Class for quadratic function generator
 
-    .. math:: f(x, y) = a(x - x_1)^2 + b(y - y_1)^2 + c(x - x_2)(y - y_2)
+    .. math:: f(x, y) = a(x - x_1)^2 + b(y - y_1)^2 + c(x - x_2)(y - y_2) + d
 
     Methods
     -------
-    __init__(a, b, c, x1, x2, y1, y2, xrange, yrange) -> None:
+    __init__(
+        a: Union[float, int],
+        b: Union[float, int],
+        c: Union[float, int],
+        d: Union[float, int],
+        x1: Union[float, int],
+        x2: Union[float, int],
+        y1: Union[float, int],
+        y2: Union[float, int],
+        xrange: np.ndarray,
+        yrange: np.ndarray
+    ) -> None:
         initialize attributes listed below.
 
     __call__() -> Dict[str, np.ndarray]:
@@ -52,6 +63,7 @@ class QuadraticGenerator(Generator):
         a: Union[float, int] = 1,
         b: Union[float, int] = 1,
         c: Union[float, int] = 1,
+        d: Union[float, int] = 0,
         x1: Union[float, int] = 50,
         x2: Union[float, int] = 50,
         y1: Union[float, int] = 30,
@@ -70,6 +82,9 @@ class QuadraticGenerator(Generator):
 
         c: Union[float, int], default: 1
             coeff for :math:`(x - x_2)(y - y_2)`
+
+        d: Union[float, int], default: 0
+            constant number.
 
         x1: Union[float, int], default: 50
             centering factor in :math:`(x - x_1)^2`
@@ -92,7 +107,8 @@ class QuadraticGenerator(Generator):
         Examples
         --------
         >>> import numpy as np
-        >>> from sparcity import Coord, Generator
+        >>> from sparcity import Coord
+        >>> from sparcity.core import Generator
         >>> from sparcity.dataset import QuadraticGenerator
         >>> model1 = QuadraticGenerator()
         >>> np.all(model1.x == np.linspace(0, 100, 1000))
@@ -115,17 +131,18 @@ class QuadraticGenerator(Generator):
         True
         >>> isinstance(model1, Coord)
         True
-        >>> a, b, c = (2, 3, 4)
+        >>> a, b, c, d = (2, 3, 4, 5)
         >>> x1, x2, y1, y2 = (10, 20, 30, 40)
         >>> xrange = np.linspace(-10, 50, 100)
         >>> yrange = np.linspace(20, 70, 150)
-        >>> model2 = QuadraticGenerator(a, b, c, x1, x2, y1, y2, xrange, yrange)
+        >>> model2 = QuadraticGenerator(a, b, c, d, x1, x2, y1, y2, xrange, yrange)
         >>> np.all(model2.x == xrange)
         True
         >>> np.all(model2.y == yrange)
         True
         >>> x_2d_2, y_2d_2 = np.meshgrid(xrange, yrange)
-        >>> z2 = a * (x_2d_2 - x1) ** 2 + b * (y_2d_2 - y1) ** 2 + c * (x_2d_2 - x2) * (y_2d_2 - y2)
+        >>> z2 = a * (x_2d_2 - x1) ** 2 + b * (y_2d_2 - y1) ** 2 \
+            + c * (x_2d_2 - x2) * (y_2d_2 - y2) + d
         >>> np.all(model2.z == z2)
         True
         >>> model2.shape
@@ -140,12 +157,16 @@ class QuadraticGenerator(Generator):
         typechecker(y2, (float, int), "y2")
         typechecker(xrange, np.ndarray, "xrange")
         typechecker(yrange, np.ndarray, "yrange")
+        valchecker(xrange.ndim == 1)
+        valchecker(yrange.ndim == 1)
+        valchecker(is_monotonical_increasing(xrange))
+        valchecker(is_monotonical_increasing(yrange))
 
         self.x = xrange
         self.y = yrange
         self.x_2d, self.y_2d = np.meshgrid(self.x, self.y)
         self.z = a * (self.x_2d - x1) ** 2 + \
-            b * (self.y_2d - y1) ** 2 + c * (self.x_2d - x2) * (self.y_2d - y2)
+            b * (self.y_2d - y1) ** 2 + c * (self.x_2d - x2) * (self.y_2d - y2) + d
         self.shape = self.z.shape
 
     def __call__(self):

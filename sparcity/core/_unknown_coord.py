@@ -3,7 +3,7 @@ Class of Unknown Coordinates
 """
 import numpy as np
 
-from sparcity.dev import typechecker, valchecker
+from sparcity.dev import is_monotonical_increasing, typechecker, valchecker
 from ._coord import Coord
 
 
@@ -90,8 +90,10 @@ class UnknownCoord(Coord):
         """
         typechecker(x, np.ndarray, "x")
         typechecker(y, np.ndarray, "y")
-        valchecker(len(x.shape) == 1)
-        valchecker(len(y.shape) == 1)
+        valchecker(x.ndim == 1)
+        valchecker(y.ndim == 1)
+        valchecker(is_monotonical_increasing(x))
+        valchecker(is_monotonical_increasing(y))
         self.x = x
         self.y = y
         self.z = np.array(

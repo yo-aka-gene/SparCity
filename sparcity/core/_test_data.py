@@ -38,11 +38,8 @@ class TestData:
         DataFrame of output data. Corresponding output for the duplicated inputs
         are removed.
 
-    is_evaluable: bool
-        False iif the dtype of `field` is UnknownCoord, otherwise True.
-
-    shape: Tuple[int]
-        shape of `field`
+    field: Union[Coord, UnknownCoord]
+        Input field
     """
     def __init__(
         self,
@@ -75,9 +72,9 @@ class TestData:
         True
         >>> np.all(test1.output == output1)
         True
-        >>> test1.is_evaluable
-        True
-        >>> test1.shape
+        >>> isinstance(test1.field, UnknownCoord)
+        False
+        >>> test1.field.shape
         (3, 3)
         >>> x2 = np.array([2, 3])
         >>> y2 = np.array([5, 6, 7])
@@ -96,9 +93,9 @@ class TestData:
         True
         >>> np.all(np.isnan(test2.output))
         True
-        >>> test2.is_evaluable
-        False
-        >>> test2.shape
+        >>> isinstance(test2.field, UnknownCoord)
+        True
+        >>> test2.field.shape
         (3, 2)
         """
         typechecker(field, (Coord, UnknownCoord), "field")
@@ -114,9 +111,7 @@ class TestData:
             }
         ).loc[self.input.index, :]
 
-        self.is_evaluable = not isinstance(field, UnknownCoord)
-
-        self.shape = field.shape
+        self.field = field
 
     def as_ndarray(self) -> Tuple[np.array]:
         """

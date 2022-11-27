@@ -3,7 +3,7 @@ Class of Coordinates
 """
 import numpy as np
 
-from sparcity.dev import typechecker, valchecker
+from sparcity.dev import is_monotonical_increasing, typechecker, valchecker
 
 
 class Coord:
@@ -91,11 +91,13 @@ class Coord:
         typechecker(x, np.ndarray, "x")
         typechecker(y, np.ndarray, "y")
         typechecker(z, np.ndarray, "z")
-        valchecker(len(x.shape) == 1)
-        valchecker(len(y.shape) == 1)
-        valchecker(len(z.shape) == 2)
+        valchecker(x.ndim == 1)
+        valchecker(y.ndim == 1)
+        valchecker(z.ndim == 2)
         valchecker(x.size == z.shape[1])
         valchecker(y.size == z.shape[0])
+        valchecker(is_monotonical_increasing(x))
+        valchecker(is_monotonical_increasing(y))
         self.x = x
         self.y = y
         self.z = z
