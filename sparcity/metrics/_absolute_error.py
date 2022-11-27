@@ -93,4 +93,5 @@ def mean_absolute_error_score(
     1.0
     """
     arg_check(**locals())
-    return np.abs(pred.z - test.z).mean()
+    ret = np.abs(pred.z - test.z)
+    return ret[~np.isnan(ret)].mean()
