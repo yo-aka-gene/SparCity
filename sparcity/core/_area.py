@@ -304,3 +304,104 @@ def cleave(
             np.split(field.y, n_y)
         ])
     ]
+
+
+def subarea_in_grid(
+    x: Union[float, int],
+    y: Union[float, int],
+    length: Union[float, int],
+    grid: SubCoord,
+    field: Coord
+) -> SubCoord:
+    """
+    A function that crops a squared-shaped area in grids
+    centering the designated point (x, y).
+    Expected to be called in sampler classes.
+
+    Parameters
+    ----------
+    x: Union[float, int]
+        x-coordinate (longitude) for the center
+
+    y: Union[float, int]
+        y-coordinate (latitude) for the center
+
+    length: Union[float, int]
+        length of a side in the square
+        expected to be positive while being smaller than each side in the original field.
+
+    grid: SubCoord
+        SubCoord of designated grid
+
+    field: Coord
+        Coord class of the original field
+
+    Returns
+    -------
+    Subarea: SubCoord
+        SubCoord class of the cropped subarea.
+        The center position will be automatically formatted to adjust the original field.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from sparcity import Coord, subarea
+    >>> from sparcity.core import cleave, subarea_in_grid
+    >>> x = np.arange(8)
+    >>> y = np.arange(8)
+    >>> z = np.arange(64).reshape(8, 8) + 100
+    >>> field = Coord(x=x, y=y, z=z)
+    >>> grid = cleave(field, 2, 2)[1]
+    >>> grid.x
+    array([0, 1, 2, 3])
+    >>> grid.y
+    array([4, 5, 6, 7])
+    >>> grid.z
+    array([[132, 133, 134, 135],
+           [140, 141, 142, 143],
+           [148, 149, 150, 151],
+           [156, 157, 158, 159]])
+    >>> subarea = subarea_in_grid(x=1, y=5, length=2, grid=grid, field=field)
+    >>> subarea.x
+    array([0, 1, 2])
+    >>> subarea.y
+    array([4, 5, 6])
+    >>> subarea.z
+    array([[132, 133, 134],
+           [140, 141, 142],
+           [148, 149, 150]])
+    """
+    typechecker(x, (float, int), "x")
+    typechecker(y, (float, int), "y")
+    typechecker(length, (float, int), "length")
+    typechecker(grid, SubCoord, "grid")
+    typechecker(field, Coord, "field")
+    valchecker(
+        0 < length < min(
+            grid.x.max() - grid.x.min(),
+            grid.y.max() - grid.y.min()
+        )
+    )
+
+    diff = length / 2
+    if x <= grid.x.min() + diff:
+        locx = np.where((grid.x.min() <= field.x) & (field.x <= grid.x.min() + length))[0]
+    elif x >= grid.x.max() - diff:
+        locx = np.where((grid.x.max() >= field.x) & (field.x >= field.x.max() - length))[0]
+    else:
+        locx = np.where((x - diff <= field.x) & (field.x <= x + diff))[0]
+
+    if y <= grid.y.min() + diff:
+        locy = np.where((grid.y.min() <= field.y) & (field.y <= grid.y.min() + length))[0]
+    elif y >= grid.y.max() - diff:
+        locy = np.where((grid.y.max() >= field.y) & (field.y >= field.y.max() - length))[0]
+    else:
+        locy = np.where((y - diff <= field.y) & (field.y <= y + diff))[0]
+
+    return SubCoord(
+        x=field.x[locx],
+        y=field.y[locy],
+        z=field.z[:, locx][locy, :],
+        locx=locx,
+        locy=locy
+    )
