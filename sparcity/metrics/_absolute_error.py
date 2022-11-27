@@ -33,6 +33,26 @@ def absolute_error(
     >>> err11 = absolute_error(area1, area1)
     >>> isinstance(err11, Coord)
     True
+    >>> err11.shape == area1.shape
+    True
+    >>> np.all(err11.x == area1.x)
+    True
+    >>> np.all(err11.y == area1.y)
+    True
+    >>> np.all(err11.z == np.zeros(area1.shape))
+    True
+    >>> err12 = absolute_error(area1, area2)
+    >>> err12.shape == area1.shape == area2.shape
+    True
+    >>> np.all(err12.x == area1.x) and np.all(err12.x == area2.x)
+    True
+    >>> np.all(err12.y == area1.y) and np.all(err12.y == area2.y)
+    True
+    >>> np.all(err12.z.astype(np.float32) == np.ones(area1.shape))
+    True
+    >>> err21 = absolute_error(area2, area1)
+    >>> np.all(err21.z.astype(np.float32) == np.ones(area1.shape))
+    True
     """
     arg_check(**locals())
     return Coord(
