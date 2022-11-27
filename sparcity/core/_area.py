@@ -1,12 +1,13 @@
 """
 function to crop a square-shaped area
 """
+from itertools import product
 from typing import List, Union
 
 import numpy as np
 from tqdm import tqdm
 
-from sparcity.dev import is_subarray, typechecker, valchecker
+from sparcity.dev import get_subarray_loc, is_subarray, typechecker, valchecker
 from ._coord import Coord
 from ._subcoord import SubCoord
 
@@ -232,3 +233,74 @@ def patch(
         y=field.y,
         z=z
     )
+
+
+def cleave(
+    field: Coord,
+    n_x: Union[int, np.int64] = 1,
+    n_y: Union[int, np.int64] = 1
+) -> List[SubCoord]:
+    """
+    function to cleave fields into subareas
+
+    Parameters
+    ----------
+    fileds: Coord
+        original field
+
+    n_x: Union[int, np.int64], defualt = 1
+        Number of blocks in x (longitude)
+
+    n_y: Union[int, np.int64], defualt = 1
+        Number of blocks in y (latitude)
+
+    Returns
+    -------
+    Blocks: List[SubCoord]
+        list of cleaved blocks (SubCoord)
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from sparcity.core import Coord, cleave, SubCoord
+    >>> x = np.arange(4)
+    >>> y = np.arange(3)
+    >>> z = np.arange(12).reshape(3, 4) + 20
+    >>> field = Coord(x=x, y=y, z=z)
+    >>> lst_subcoord = cleave(field, 2, 3)
+    >>> len(lst_subcoord)
+    6
+    >>> isinstance(lst_subcoord[0], SubCoord)
+    True
+    >>> lst_subcoord[0].shape
+    (1, 2)
+    >>> lst_subcoord[1].x
+    array([0, 1])
+    >>> lst_subcoord[1].y
+    array([1])
+    >>> lst_subcoord[1].z
+    array([[24, 25]])
+    """
+    typechecker(field, Coord, "field")
+    typechecker(n_x, (int, np.int64), "n_x")
+    typechecker(n_y, (int, np.int64), "n_y")
+    valchecker(n_x > 0)
+    valchecker(n_y > 0)
+    valchecker(field.x.size >= n_x)
+    valchecker(field.y.size >= n_y)
+    return [
+        SubCoord(
+            x=x,
+            y=y,
+            z=field.z[
+                :, get_subarray_loc(x, field.x)
+            ][
+                get_subarray_loc(y, field.y), :
+            ],
+            locx=get_subarray_loc(x, field.x),
+            locy=get_subarray_loc(y, field.y)
+        ) for x, y in product(*[
+            np.split(field.x, n_x),
+            np.split(field.y, n_y)
+        ])
+    ]
