@@ -7,8 +7,8 @@ from ._training_data import TrainData
 from ._unknown_coord import UnknownCoord
 
 __all__ = [
-    "Coord",
     "cleave",
+    "Coord",
     "Generator",
     "patch",
     "subarea",
