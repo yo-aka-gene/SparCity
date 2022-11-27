@@ -85,7 +85,7 @@ class RandomInGrid(TrainData):
         """
         typechecker(n_x, (int, np.int64), "n_x")
         typechecker(n_y, (int, np.int64), "n_y")
-        typechecker(length, int, "length")
+        typechecker(length, (int, np.int64, float, np.float64), "length")
         typechecker(field, Coord, "field")
         typechecker(seed, (int, np.int64), "seed")
         valchecker(0 < n_x < field.x.size)
