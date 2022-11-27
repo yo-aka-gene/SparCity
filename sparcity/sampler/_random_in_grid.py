@@ -6,7 +6,7 @@ from typing import Tuple, Union
 import numpy as np
 import torch as t
 
-from sparcity.core import cleave, Coord, patch, subarea, TrainData
+from sparcity.core import cleave, Coord, patch, subarea_in_grid, TrainData
 from sparcity.dev import typechecker, valchecker
 from sparcity.random import random_coord, seedfixer
 
@@ -85,7 +85,7 @@ class RandomInGrid(TrainData):
         """
         typechecker(n_x, (int, np.int64), "n_x")
         typechecker(n_y, (int, np.int64), "n_y")
-        typechecker(length, int, "length")
+        typechecker(length, (int, np.int64, float, np.float64), "length")
         typechecker(field, Coord, "field")
         typechecker(seed, (int, np.int64), "seed")
         valchecker(0 < n_x < field.x.size)
@@ -97,12 +97,13 @@ class RandomInGrid(TrainData):
             seedfixer(seed, n_x * n_y, i)
             sampling_seed = np.random.randint(0, 2 ** 32 - 1, 1).item()
             coords += [
-                    subarea(
+                    subarea_in_grid(
                         *random_coord(
                             grids[i],
                             sampling_seed
                         ),
                         length=length,
+                        grid=grids[i],
                         field=field
                     )
                 ]

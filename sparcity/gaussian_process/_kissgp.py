@@ -236,10 +236,10 @@ class KISSGPRegression(gpt.models.ExactGP):
         with t.no_grad(), gpt.settings.fast_pred_var():
             predicted = self.likelihood(
                 self(testdata.as_tensor()[0])
-            ).mean.view(*testdata.shape)
+            ).mean.view(*testdata.field.shape)
 
         return Coord(
-            x=testdata.x,
-            y=testdata.y,
+            x=testdata.field.x,
+            y=testdata.field.y,
             z=predicted.numpy()
         )
