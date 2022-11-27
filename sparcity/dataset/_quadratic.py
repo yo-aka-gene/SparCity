@@ -6,7 +6,7 @@ from typing import Union
 import numpy as np
 
 from sparcity.core import Generator
-from sparcity.dev import typechecker
+from sparcity.dev import is_monotonical_increasing, typechecker, valchecker
 
 
 class QuadraticGenerator(Generator):
@@ -157,6 +157,10 @@ class QuadraticGenerator(Generator):
         typechecker(y2, (float, int), "y2")
         typechecker(xrange, np.ndarray, "xrange")
         typechecker(yrange, np.ndarray, "yrange")
+        valchecker(xrange.ndim == 1)
+        valchecker(yrange.ndim == 1)
+        valchecker(is_monotonical_increasing(xrange))
+        valchecker(is_monotonical_increasing(yrange))
 
         self.x = xrange
         self.y = yrange

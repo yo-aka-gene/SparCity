@@ -3,7 +3,7 @@ Class of Subareas' Coordinates
 """
 import numpy as np
 
-from sparcity.dev import typechecker, valchecker
+from sparcity.dev import is_monotonical_increasing, typechecker, valchecker
 from ._coord import Coord
 
 
@@ -121,11 +121,13 @@ class SubCoord(Coord):
         typechecker(z, np.ndarray, "z")
         typechecker(locx, np.ndarray, "locx")
         typechecker(locy, np.ndarray, "locy")
-        valchecker(len(x.shape) == 1)
-        valchecker(len(y.shape) == 1)
-        valchecker(len(z.shape) == 2)
-        valchecker(len(locx.shape) == 1)
-        valchecker(len(locy.shape) == 1)
+        valchecker(x.ndim == 1)
+        valchecker(y.ndim == 1)
+        valchecker(z.ndim == 2)
+        valchecker(locx.ndim == 1)
+        valchecker(locy.ndim == 1)
+        valchecker(is_monotonical_increasing(x))
+        valchecker(is_monotonical_increasing(y))
         valchecker(x.size == z.shape[1])
         valchecker(y.size == z.shape[0])
         valchecker(locx.size * locy.size == z.ravel().size)
