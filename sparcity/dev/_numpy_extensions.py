@@ -44,11 +44,11 @@ def is_subarray(arr1: np.ndarray, arr2: np.ndarray) -> bool:
     """
     typechecker(arr1, np.ndarray, "arr1")
     typechecker(arr2, np.ndarray, "arr2")
-    valchecker(len(arr1.shape) == 1)
-    valchecker(len(arr2.shape) == 1)
+    valchecker(arr1.ndim == 1)
+    valchecker(arr2.ndim == 1)
     valchecker(is_monotonical_increasing(arr1))
     valchecker(is_monotonical_increasing(arr2))
-    ret = len(arr1) <= len(arr2)
+    ret = arr1.size <= arr2.size
     ret &= arr1.min() in arr2
     ret &= arr1.max() in arr2
     if ret:
@@ -84,3 +84,41 @@ def is_monotonical_increasing(arr: np.ndarray) -> bool:
     typechecker(arr, np.ndarray, "arr")
     valchecker(len(arr.shape) == 1)
     return np.all(np.diff(arr) > 0)
+
+
+def get_subarray_loc(
+    subarr: np.ndarray,
+    arr: np.ndarray
+) -> np.ndarray:
+    """
+    function to get locations of subarray
+
+    Parameters
+    ----------
+    subarr: np.ndarray
+        subarray of arr
+
+    arr: np.ndarray
+        superarray of array
+
+    Returns
+    -------
+    loc: np.ndarray
+        location of subarray in superarray
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from sparcity.dev import get_subarray_loc
+    >>> arr1 = np.arange(10)
+    >>> subarr = np.arange(3, 5)
+    >>> get_subarray_loc(subarr, arr1)
+    array([3, 4])
+    >>> arr2 = np.arange(3, 10)
+    >>> get_subarray_loc(subarr, arr2)
+    array([0, 1])
+    """
+    valchecker(is_subarray(subarr, arr))
+    m = np.where(arr == subarr.min())[0].item()
+    M = np.where(arr == subarr.max())[0].item()
+    return np.arange(m, M + 1)
