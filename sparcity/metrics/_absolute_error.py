@@ -57,6 +57,6 @@ def absolute_error(
     arg_check(**locals())
     return Coord(
         x=pred.x,
-        y=pred.x,
+        y=pred.y,
         z=np.abs(pred.z - test.z)
     )
