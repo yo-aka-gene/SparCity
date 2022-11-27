@@ -387,14 +387,14 @@ def subarea_in_grid(
     if x <= grid.x.min() + diff:
         locx = np.where((grid.x.min() <= field.x) & (field.x <= grid.x.min() + length))[0]
     elif x >= grid.x.max() - diff:
-        locx = np.where((grid.x.max() >= field.x) & (field.x >= field.x.max() - length))[0]
+        locx = np.where((grid.x.max() >= field.x) & (field.x >= grid.x.max() - length))[0]
     else:
         locx = np.where((x - diff <= field.x) & (field.x <= x + diff))[0]
 
     if y <= grid.y.min() + diff:
         locy = np.where((grid.y.min() <= field.y) & (field.y <= grid.y.min() + length))[0]
     elif y >= grid.y.max() - diff:
-        locy = np.where((grid.y.max() >= field.y) & (field.y >= field.y.max() - length))[0]
+        locy = np.where((grid.y.max() >= field.y) & (field.y >= grid.y.max() - length))[0]
     else:
         locy = np.where((y - diff <= field.y) & (field.y <= y + diff))[0]
 
