@@ -243,11 +243,3 @@ class KISSGPRegression(gpt.models.ExactGP):
             y=testdata.y,
             z=predicted.numpy()
         )
-
-        # self.groundtruth = testdata.as_tensor()[1].reshape(
-        #     *testdata.shape
-        # )
-
-        # self.error = t.abs(
-        #     self.predicted - self.groundtruth
-        # ).detach()
