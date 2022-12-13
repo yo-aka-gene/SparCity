@@ -143,8 +143,7 @@ class QuadraticGenerator(Generator):
         >>> np.all(model2.y == yrange)
         True
         >>> x_2d_2, y_2d_2 = np.meshgrid(xrange, yrange)
-        >>> z2 = a * (x_2d_2 - x1) ** 2 + b * (y_2d_2 - y1) ** 2 \
-            + c * (x_2d_2 - x2) * (y_2d_2 - y2) + d
+        >>> z2 = a * (x_2d_2 - x1) ** 2 + b * (y_2d_2 - y1) ** 2 + c * (x_2d_2 - x2) * (y_2d_2 - y2) + d
         >>> np.all(model2.z == z2)
         True
         >>> model2.shape
