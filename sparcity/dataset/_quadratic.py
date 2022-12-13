@@ -68,8 +68,8 @@ class QuadraticGenerator(Generator):
         x2: Union[float, int] = 50,
         y1: Union[float, int] = 30,
         y2: Union[float, int] = 30,
-        xrange: np.ndarray = np.linspace(0, 100, 1000),
-        yrange: np.ndarray = np.linspace(0, 100, 1000)
+        xrange: np.ndarray = None,
+        yrange: np.ndarray = None
     ) -> None:
         """
         Parameters
@@ -98,11 +98,13 @@ class QuadraticGenerator(Generator):
         y2: Union[float, int], default: 30
             centering factor in :math:`(x - x_2)(y - y_2)`
 
-        xrange: numpy.ndarray, default: numpy.linspace(0, 100, 1000)
-            x-values to calculate
+        xrange: numpy.ndarray, default: None
+            x-values to calculate. If xrange is None, it will be set to
+            numpy.linspace(0, 100, 1000) automatically.
 
-        yrange: numpy.ndarray, default: numpy.linspace(0, 100, 1000)
-            y-values to calculate
+        yrange: numpy.ndarray, default: None
+            y-values to calculate. If yrange is None, it will be set to
+            numpy.linspace(0, 100, 1000) automatically.
 
         Examples
         --------
@@ -155,6 +157,10 @@ class QuadraticGenerator(Generator):
         typechecker(x2, (float, int), "x2")
         typechecker(y1, (float, int), "y1")
         typechecker(y2, (float, int), "y2")
+        if xrange is None:
+            xrange = np.linspace(0, 100, 1000)
+        if yrange is None:
+            yrange = np.linspace(0, 100, 1000)
         typechecker(xrange, np.ndarray, "xrange")
         typechecker(yrange, np.ndarray, "yrange")
         valchecker(xrange.ndim == 1)
