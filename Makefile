@@ -1,4 +1,4 @@
-.PHONY: clean clean-build clean-pyc clean-test lint test help docs
+.PHONY: clean clean-build clean-pyc clean-test lint test help docs build_pkg
 .DEFAULT_GOAL := help
 
 define BROWSER_PYSCRIPT
@@ -60,3 +60,9 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
+
+build-pkg: ## generate setup.py
+	poetry build
+	tar zxvf dist/sparcity*.tar.gz -C ./dist
+	cp dist/sparcity*/setup.py setup.py
+	rm -rf dist
