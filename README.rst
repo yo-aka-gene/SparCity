@@ -1,6 +1,6 @@
-========
-SparCity
-========
+===================
+README for SparCity
+===================
 
 .. image:: https://readthedocs.org/projects/sparcity/badge/?version=latest
     :target: https://sparcity.readthedocs.io/en/latest/?badge=latest
