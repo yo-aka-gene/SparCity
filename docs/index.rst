@@ -12,6 +12,7 @@ Welcome to sparcity's documentation!
    
    readme
    modules
+   authors
 
 
 
