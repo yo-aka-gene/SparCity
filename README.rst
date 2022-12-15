@@ -7,7 +7,7 @@ README: SparCity
     :alt: Documentation Status
 
 .. image:: ./docs/_static/logo.PNG
-    :scale: 5%
+    :scale: 0.5%
     :align: center
 
 Sparse estimator for geographical information
