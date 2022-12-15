@@ -6,7 +6,7 @@ README: SparCity
     :target: https://sparcity.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: https://github.com/yo-aka-gene/SparCity/blob/doc/docs/_static/logo.PNG
+.. image:: https://raw.githubusercontent.com/yo-aka-gene/SparCity/doc/docs/_static/logo.PNG
     :height: 150px
     :width: 150px
     :align: center
