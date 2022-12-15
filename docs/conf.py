@@ -6,6 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import glob
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
@@ -25,7 +26,6 @@ extensions = ['sphinx.ext.autodoc', 'nbsphinx', 'sphinx_gallery.load_style']
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -55,3 +55,9 @@ texinfo_documents = [
      'Sparse estimator for geographical information',
      'Miscellaneous'),
 ]
+
+nbsphinx_thumbnails = {
+    "/".join(v.split(".")[:-1]): v.replace(
+        "notebooks", "_static"
+    ).replace("ipynb", "png") for v in glob.glob("notebooks/*")
+}
