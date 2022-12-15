@@ -62,8 +62,10 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	$(BROWSER) docs/_build/html/index.html
 
 deps: ## export dependencies
+	mv ./description.md ./README.md
 	poetry export -f requirements.txt --output ./docs/requirements.txt
 	poetry build
 	tar zxvf dist/sparcity*.tar.gz -C ./dist
 	cp dist/sparcity*/setup.py setup.py
 	rm -rf dist
+	mv ./README.md ./description.md
