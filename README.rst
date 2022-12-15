@@ -6,7 +6,7 @@ README: SparCity
     :target: https://sparcity.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: ./docs/_static/logo.PNG
+.. image:: */_static/logo.PNG
     :height: 150px
     :width: 150px
     :align: center
