@@ -29,7 +29,7 @@ setup_kwargs = {
     'name': 'sparcity',
     'version': '0.1.0',
     'description': 'Sparse estimator for geographical information',
-    'long_description': '# SparCity\nSparse estimator for geographical information\n',
+    'long_description': 'Sparse estimator for geographical information\n',
     'author': 'yo-aka-gene',
     'author_email': 'yujiokano@keio.jp',
     'maintainer': 'None',
