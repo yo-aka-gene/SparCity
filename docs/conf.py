@@ -57,7 +57,17 @@ texinfo_documents = [
 ]
 
 nbsphinx_thumbnails = {
-    "/".join(v.split(".")[:-1]): v.replace(
+    "/".join(
+        v.split(".")[:-1]
+    ): v.replace(
         "notebooks", "_static"
-    ).replace("ipynb", "png") for v in glob.glob("notebooks/*")
+    ).replace(
+        "ipynb", "png"
+    ) if os.path.exists(
+        v.replace(
+            "notebooks", "_static"
+        ).replace(
+            "ipynb", "png"
+        )
+    ) else "_static/logo.PNG" for v in glob.glob("notebooks/*")
 }
