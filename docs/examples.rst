@@ -1,9 +1,19 @@
 Examples
 ========
 
+Quadratic Function
+------------------
 
 .. nbgallery::
-    :caption: Quadratic Function
 
     notebooks/quadratic_rs
     notebooks/quadratic_rig
+
+
+Oyama Data
+----------
+
+.. nbgallery::
+    :caption: Oyama data
+
+    notebooks/oyamadata
