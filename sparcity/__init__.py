@@ -5,6 +5,7 @@ from . import dataset
 from . import debug_utils
 from . import dev
 from . import gaussian_process
+from . import pipeline
 from . import random
 from . import sampler
 from .core import Coord, subarea, patch, TestData, TrainData, UnknownCoord
@@ -17,6 +18,7 @@ __all__ = [
     "dev",
     "gaussian_process",
     "patch",
+    "pipeline",
     "random",
     "sampler",
     "subarea",
