@@ -1,10 +1,10 @@
-sparcity.gaussian\_process package
-==================================
+sparcity.pipeline package
+=========================
 
 Module contents
 ---------------
 
-.. automodule:: sparcity.gaussian_process
+.. automodule:: sparcity.pipeline
    :members:
    :special-members: __init__
    :undoc-members:
