@@ -8,7 +8,9 @@ from . import gaussian_process
 from . import pipeline
 from . import random
 from . import sampler
-from .core import Coord, subarea, patch, TestData, TrainData, UnknownCoord
+from .core import (
+    Coord, GPModel, subarea, patch, TestData, TrainData, UnknownCoord
+)
 
 __all__ = [
     "core",
@@ -17,6 +19,7 @@ __all__ = [
     "debug_utils",
     "dev",
     "gaussian_process",
+    "GPModel",
     "patch",
     "pipeline",
     "random",
