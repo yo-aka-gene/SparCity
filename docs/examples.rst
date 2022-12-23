@@ -17,3 +17,11 @@ Oyama Data
     :caption: Oyama data
 
     notebooks/oyamadata
+
+
+Sampling Strategy
+-----------------
+
+.. nbgallery::
+
+    notebooks/compare
