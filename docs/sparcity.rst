@@ -13,6 +13,7 @@ Subpackages
    sparcity.dev
    sparcity.gaussian_process
    sparcity.metrics
+   sparcity.pipeline
    sparcity.random
    sparcity.sampler
 
