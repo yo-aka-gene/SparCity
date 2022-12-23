@@ -4,7 +4,6 @@ Class of KISS-GP Regression
 import gpytorch as gpt
 from gpytorch.likelihoods import GaussianLikelihood
 import torch as t
-from tqdm import tqdm
 
 from sparcity.core import Coord, GPModel, TrainData, TestData
 
