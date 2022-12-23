@@ -16,3 +16,4 @@ Sparse estimator for geographical information
 
 * Free software: MIT license
 * Documentation: https://sparcity.readthedocs.io
+* GitHub: https://github.com/yo-aka-gene/SparCity
