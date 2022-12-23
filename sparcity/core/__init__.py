@@ -1,5 +1,6 @@
 from ._area import cleave, subarea, subarea_in_grid, patch
 from ._coord import Coord
+from ._gpmodel import GPModel
 from ._generator import Generator
 from ._subcoord import SubCoord
 from ._test_data import TestData
@@ -10,6 +11,7 @@ __all__ = [
     "cleave",
     "Coord",
     "Generator",
+    "GPModel",
     "patch",
     "subarea",
     "subarea_in_grid",
