@@ -35,8 +35,7 @@ class GPModel(gpt.models.ExactGP):
         n_iter: int,
         **kwargs
     ) -> None:
-        train model & likelihood + optimize hyperparameters
-         + set model & likelihood into evaluation mode
+        train model & likelihood + optimize hyperparameters + set model & likelihood into evaluation mode
 
     predict() -> Coord:
         Predict coordinates from testdata
