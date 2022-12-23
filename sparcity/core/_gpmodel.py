@@ -165,7 +165,7 @@ class GPModel(gpt.models.ExactGP):
             self.likelihood,
             self
         )
-  
+
         iterator = tqdm(
             range(n_iter),
             desc="Optimization",
