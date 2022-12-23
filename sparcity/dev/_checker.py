@@ -1,14 +1,14 @@
 """
 functions for checking arguments
 """
-from typing import Any, Tuple, Union
+from typing import Any, Callable, Tuple, Union
 
 import numpy as np
 
 
 def typechecker(
     arg: Any,
-    types: Union[Tuple[type], type],
+    types: Union[Callable, Tuple[type], type],
     varname: str
 ) -> None:
     """
@@ -20,7 +20,7 @@ def typechecker(
     arg: Any
         argument of the function
 
-    types: Union[Tuple[type], type]
+    types: Union[Callable, Tuple[type], type]
         a tuple of acceptable dtypes or a single dtype
 
     varname: str
@@ -45,8 +45,8 @@ def typechecker(
     >>> typechecker(0.5, (float, np.float64), "Q")
 
     """
-    assert isinstance(types, (type, tuple)), \
-        f"Invalid definition of argument dtype, {types}. Please assign type or tuple of types"
+    assert isinstance(types, (Callable, type, tuple)), \
+        f"Invalid definition of argument dtype, {types}. Please assign Callable, type or tuple of types"
     if isinstance(types, tuple):
         for v in types:
             assert isinstance(v, type), \
