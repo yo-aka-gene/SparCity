@@ -43,5 +43,5 @@ def init_args(model: gpt.models.ExactGP) -> dict:
     state_dict = dict(model.state_dict())
     named_params = dict(model.named_parameters())
     return copy.deepcopy(
-        {v:state_dict[v] for v in named_params}
+        {v: state_dict[v] for v in named_params}
     )
